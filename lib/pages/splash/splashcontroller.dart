@@ -8,7 +8,7 @@ class SplashController extends GetxController {
   onload() async {
     Timer(const Duration(seconds: 4), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var key = prefs.getString('key');
+      var key = prefs.getString(Appstring.userkey);
       if (key == null) {
         Get.offNamed(Appstring.login);
       } else {

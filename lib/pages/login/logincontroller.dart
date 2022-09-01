@@ -52,8 +52,8 @@ class LoginController extends GetxController {
       var name = responce["user"]["firstname"];
       loader.toggle();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('key', key);
-      await prefs.setString('userid', name);
+      await prefs.setString(Appstring.userkey, key);
+      await prefs.setString(Appstring.userid, name);
       Get.offNamed(Appstring.home);
     }
     //(Appstring.home);

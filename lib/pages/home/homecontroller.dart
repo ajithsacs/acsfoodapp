@@ -19,8 +19,8 @@ class Homecontroller extends GetxController {
 
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-     await prefs.remove('userid');
-     await prefs.remove("key");
+    await prefs.remove('userid');
+    await prefs.remove("key");
   }
 
   oninit() async {
@@ -127,7 +127,7 @@ class Homecontroller extends GetxController {
     int minute = int.parse(time.split(":")[1]);
     print(hour);
     print(minute);
-    if (hour == 24) {
+    if (hour == 11) {
       if (minute == 30) {
         Get.snackbar("Time is up", "Book in redmine sorry for inconvenience",
             icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
@@ -138,7 +138,7 @@ class Homecontroller extends GetxController {
 
         //todo
       }
-    } else if (hour >= 24) {
+    } else if (hour >= 12) {
       Get.snackbar("Time is up", "Book in redmine sorry for inconvenience",
           icon: Icon(Icons.close, color: Color.fromARGB(255, 165, 17, 17)),
           snackPosition: SnackPosition.TOP,
