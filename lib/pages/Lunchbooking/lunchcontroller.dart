@@ -6,23 +6,25 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../../const/stringconst.dart';
+
 class LunchController extends GetxController {
   var isbooked = false.obs;
   var isloading = false.obs;
   booked() {
-    isbooked.toggle();
+    // isbooked.toggle();
   }
 
   var noselected = 'chapathi'.obs;
   var selected = "".obs;
+  var extra= ''.obs;
   RxList mainiteams = [].obs;
   RxList extraiteam = [].obs;
   booklunch() async {
-    // print(selected);
     var foodoption = mainiteams.indexOf(selected.value) + 1;
-    print(foodoption);
+    var extra= extraiteam.indexOf(selected.value)+1;
     var key = await getusercredential();
-    var getbody = await postbody(foodoption);
+    var getbody = await postbody(foodoption,extra);
     var body = jsonEncode(getbody);
     //print(body.runtimeType);
     try {
@@ -45,7 +47,7 @@ class LunchController extends GetxController {
         var data = jsonDecode(response.body);
         var newdata = data["id"];
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString(currentdate.toString(), newdata.toString());
+        await prefs.setString(currentdate.toString(), currentdate.toString());
         return response.statusCode;
       } else {
         return response.statusCode;
@@ -86,7 +88,7 @@ class LunchController extends GetxController {
     return key;
   }
 
-  postbody(foodcode) {
+  postbody(foodcode,extra) {
     return {
       "time_entry": {
         "project_id": 342,
@@ -95,14 +97,15 @@ class LunchController extends GetxController {
         "custom_fields": [
           {"id": 39, "value": 1},
           {"id": 41, "value": foodcode},
-          {"id": 59, "value": "Non Billable"}
+          {"id": 59, "value": "Non Billable"},
+          // {"id":'',"value":'extra'}
         ],
         "comments": ""
       }
     };
   }
 
-  cancell() async {
+  cancel() async {
     var key = await getusercredential();
     DateTime currentDate = DateTime.now();
     var currentdate = DateFormat("yyyy-MM-dd")
@@ -146,5 +149,38 @@ class LunchController extends GetxController {
     } catch (e) {
       return -1;
     }
+  }
+   precheck() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userid= await getuserid();
+      var prevMonth = 't';
+      // https://pm.agilecyber.co.uk/projects/lunch/time_entries?utf8=✓&set_filter=1&sort=spent_on:desc&f[]=spent_on&op[spent_on]=lm&f[]=user_id&op[user_id]==&v[user_id][]=153
+      // op[spent_on]=m - current month
+      // op[spent_on]=lm - last month
+      // op[spent_on]=t -today
+
+      var endpoint=Uri.encodeFull( Resource.baseurl + '/projects/lunch/time_entries.json?sort=spent_on:desc&f[]=spent_on&op[spent_on]=${prevMonth}&f[]=user_id&op[user_id]==&v[user_id][]=${userid}');
+      var key = await getusercredential();
+      try {
+        final responce = await http.get(
+            Uri.parse(endpoint),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Basic $key",
+            });
+        if (responce.statusCode == 200) {
+          return json.decode(responce.body) ;
+        } else {
+          return 0;
+        }
+      } catch (e) {
+        return -1;
+      }
+    }
+  getuserid() async
+  {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var user = prefs.getString(Appstring.loginid);
+    return user;
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:developer' as d;
 class LoginController extends GetxController {
   // Obtain shared preferences.
   var showpassword = true.obs;
@@ -50,10 +50,13 @@ class LoginController extends GetxController {
       }
     } else {
       var name = responce["user"]["firstname"];
+      var id=responce['user']['id'].toString();
+
       loader.toggle();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString(Appstring.userkey, key);
-      await prefs.setString(Appstring.userid, name);
+        prefs.setString(Appstring.userkey, key);
+        prefs.setString(Appstring.userid, name);
+        prefs.setString(Appstring.loginid, id);
       Get.offNamed(Appstring.home);
     }
     //(Appstring.home);

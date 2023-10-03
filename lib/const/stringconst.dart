@@ -11,4 +11,5 @@ class Appstring {
   static const usernametextfiled="Username*";
   static const passwordinputfiled="Password*";
   static const erormessageforusername="";
+  static const loginid='loginid';
 }

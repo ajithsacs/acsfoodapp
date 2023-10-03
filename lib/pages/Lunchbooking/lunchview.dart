@@ -1,8 +1,12 @@
+import 'package:acsfoodapp/const/stringconst.dart';
 import 'package:acsfoodapp/pages/Lunchbooking/lunchcontroller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class LunchView extends GetView<LunchController> {
+import '../../const/Appcolor.dart';
+
+class LunchView extends GetView<LunchController>{
   LunchView({Key? key}) : super(key: key) {
     controller.init();
   }
@@ -31,6 +35,7 @@ class LunchView extends GetView<LunchController> {
   _appbar() {
     return AppBar(
       title: Text("Book Lunch"),
+      backgroundColor:  AppColors.siteBlue,
     );
   }
 
@@ -39,6 +44,8 @@ class LunchView extends GetView<LunchController> {
       children: [
         _mainmanu(context),
         _dropdown(),
+        _mainmanu1(context),
+        _dropdown1(),
         // ListView.builder(itemBuilder: (context, index)
         // {
 
@@ -86,16 +93,29 @@ class LunchView extends GetView<LunchController> {
       ],
     );
   }
-
+  _mainmanu1(context) {
+    return SizedBox(
+        height: 20,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
+          child: Text(
+            "Extra Dish",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+        ));
+  }
   _dropdown() {
     return Padding(
-      padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
       child: Obx(() => DropdownButtonFormField(
+        focusColor: Colors.red,
           decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
+                gapPadding: 20,
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                      color: Color.fromARGB(255, 224, 0, 0), width: 5))),
+                      color: Colors.indigoAccent, width: 1))),
           items: [
             for (var data in controller.mainiteams.value)
               DropdownMenuItem(
@@ -106,6 +126,25 @@ class LunchView extends GetView<LunchController> {
           onChanged: (value) => controller.selected.value = value as String)),
     );
   }
+  _dropdown1() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+      child: Obx(() => DropdownButtonFormField(
+          decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                      color: Colors.indigoAccent, width: 1))),
+          items: [
+            for (var data in controller.extraiteam.value)
+              DropdownMenuItem(
+                child: Text(data),
+                value: data,
+              ),
+          ],
+          onChanged: (value) => controller.extra.value = value as String)),
+    );
+  }
 
   flotingbutton() {
     return FloatingActionButton.extended(
@@ -113,7 +152,10 @@ class LunchView extends GetView<LunchController> {
         var responc = await controller.booklunch();
         if (responc == 200) {
           controller.booked();
-        } else {}
+          Get.offAndToNamed(Appstring.home);
+        } else {
+          
+        }
       },
       label: Text("Book Lunch"),
       icon: Icon(Icons.breakfast_dining),
@@ -127,7 +169,7 @@ class LunchView extends GetView<LunchController> {
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30, top: 5),
           child: Text(
-            "Select any one of the menu",
+            "Select Your Dish",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ));
@@ -136,7 +178,7 @@ class LunchView extends GetView<LunchController> {
   _cancelfoodfloattingbutton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        controller.cancell();
+        controller.cancel();
       },
       label: Text("Cancel Booking"),
       icon: Icon(Icons.cancel),
@@ -146,7 +188,7 @@ class LunchView extends GetView<LunchController> {
   _bookedpage(context) {
     return Center(
       child: Container(
-        color: Color.fromARGB(255, 41, 138, 187),
+        color: Colors.blueAccent,
         alignment: Alignment.center,
         child: Text(
           "You have booked you meals",
@@ -165,4 +207,14 @@ class LunchView extends GetView<LunchController> {
   //     );
   //   }).toList(),
   // );
+  _Homefloattingbutton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        Get.toNamed(Appstring.home);
+      },
+      label: Text("Back Home"),
+      icon: Icon(Icons.home),
+    );
+  }
+
 }

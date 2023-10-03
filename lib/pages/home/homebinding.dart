@@ -7,5 +7,6 @@ class Homebinging extends Bindings {
   void dependencies() {
     Get.lazyPut(() => Homecontroller());
     Get.lazyPut(() => LunchController());
+
   }
 }

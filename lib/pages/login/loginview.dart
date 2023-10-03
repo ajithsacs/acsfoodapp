@@ -1,6 +1,7 @@
 import 'package:acsfoodapp/const/resourceconst.dart';
 import 'package:acsfoodapp/pages/login/logincontroller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class LogininView extends GetView<LoginController> {
@@ -43,8 +44,10 @@ class LogininView extends GetView<LoginController> {
   _icon() {
     return Container(
       alignment: Alignment.center,
-      child: Image.asset(
-        Resource.splasgimg,
+      child: SvgPicture.asset(
+        'assets/acs_logo.svg',
+        placeholderBuilder: (BuildContext context) => Container(
+            child: const CircularProgressIndicator()),
       ),
     );
   }
